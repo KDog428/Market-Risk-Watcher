@@ -53,3 +53,19 @@ jobs:
       - name: Run tests
         run: |
           python -m pytest -v
+
+  deploy:
+    needs: test
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    runs-on:
+      - self-hosted
+      - Linux
+      - X64
+
+    steps:
+      - name: Deploy to EC2
+        run: |
+          cd /home/ec2-user/Market-Risk-Watcher
+          ./scripts/deploy.sh
