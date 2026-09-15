@@ -4,7 +4,7 @@ from app.database import engine
 from app.yahoo_service import update_market_data
 app = FastAPI(
     title="Market Risk API",
-    version="1.0.0"
+    version="1.1.0"
 )
 
 
@@ -118,3 +118,10 @@ def get_asset(ticker: str):
 @app.post("/update")
 def update_data():
     return update_market_data()
+
+@app.get("/version")
+def version():
+    return {
+        "name": "Market Risk API",
+        "version": "1.1.0"
+    }
