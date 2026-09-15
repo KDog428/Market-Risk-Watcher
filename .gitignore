@@ -8,3 +8,5 @@ market_risk_backup.sql.DS_Store
 
 .DS_Store
 market_risk_backup.sql
+.pytest_cache/
+.hypothesis/
