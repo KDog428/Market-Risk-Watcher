@@ -34,11 +34,11 @@ services:
       - "8000:8000"
 
     environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_NAME: ${DB_NAME}
+      DB_USER: ${API_DB_USER}
+      DB_PASSWORD: ${API_DB_PASSWORD}
+      DB_HOST: ${API_DB_HOST}
+      DB_PORT: ${API_DB_PORT}
+      DB_NAME: ${API_DB_NAME}
 
     depends_on:
       db:
