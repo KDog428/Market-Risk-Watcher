@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: market-risk-api
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: market-risk-api
+
+  template:
+    metadata:
+      labels:
+        app: market-risk-api
+
+    spec:
+      containers:
+        - name: market-risk-api
+          image: market-risk-watcher-api:k8s-v1
+          imagePullPolicy: Never
+
+          ports:
+            - containerPort: 8000
+
+          envFrom:
+            - configMapRef:
+                name: market-risk-config
+
+            - secretRef:
+                name: market-risk-secrets
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "768Mi"
