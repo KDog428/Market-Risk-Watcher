@@ -74,6 +74,7 @@ GitHub Actions CI/CD
 Two PostgreSQL tables are used:
 - `assets`
 - `prices`
+  
 Risk analytics are exposed through the SQL view:`asset_risk_summary`
 The view calculates metrics including:
 
