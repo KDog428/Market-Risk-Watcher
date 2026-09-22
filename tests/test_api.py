@@ -181,3 +181,11 @@ def test_get_bonds(seeded_bond_risk_summary):
 
     assert data[2]["ticker"] == "BND"
     assert data[2]["risk_level"] == "LOW"
+
+def test_get_asset_not_found(seeded_bond_risk_summary):
+    response = client.get("/assets/NOTREAL")
+
+    assert response.status_code == 404
+    assert response.json() == {
+        "detail": "Ticker not found"
+    }

@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from sqlalchemy import text
 from app.database import engine
 from app.yahoo_service import update_market_data
@@ -110,9 +110,9 @@ def get_asset(ticker: str):
         ).mappings().first()
 
     if result is None:
-        return {
-            "error": "Ticker not found"
-        }
+        raise HTTPException(
+            status_code=404,
+            detail="Ticker not found")
 
     return dict(result)
 @app.post("/update")
