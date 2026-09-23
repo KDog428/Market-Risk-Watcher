@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Market Risk Watcher</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <h1>Market Risk Watcher</h1>
+
+        <p class="subtitle">
+            Search a market ticker to view price and risk information.
+        </p>
+
+        <div class="search-box">
+            <input
+                id="tickerInput"
+                type="text"
+                placeholder="Enter ticker, e.g. AAPL"
+            >
+
+            <button id="searchButton">
+                Search
+            </button>
+        </div>
+
+        <p id="errorMessage"></p>
+
+        <section id="assetSection" class="hidden">
+
+            <h2 id="assetTitle"></h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <span>Close</span>
+                    <strong id="close"></strong>
+                </div>
+
+                <div class="card">
+                    <span>Daily Return</span>
+                    <strong id="dailyReturn"></strong>
+                </div>
+
+                <div class="card">
+                    <span>20-Day Average</span>
+                    <strong id="movingAverage"></strong>
+                </div>
+
+                <div class="card">
+                    <span>20-Day Volatility</span>
+                    <strong id="volatility20"></strong>
+                </div>
+
+                <div class="card">
+                    <span>60-Day Volatility</span>
+                    <strong id="volatility60"></strong>
+                </div>
+
+            </div>
+
+            <div class="chart-container">
+                <canvas id="priceChart"></canvas>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>

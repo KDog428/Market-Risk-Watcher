@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from app.database import engine
 from app.yahoo_service import update_market_data
@@ -157,3 +158,12 @@ def get_asset_history(ticker: str, limit: int = 90):
         )
 
     return list(reversed(rows))
+
+app.mount(
+    "/dashboard",
+    StaticFiles(
+        directory="frontend",
+        html=True
+    ),
+    name="dashboard"
+)
