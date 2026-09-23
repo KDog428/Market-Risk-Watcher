@@ -1,3 +1,37 @@
+const bondMetadata = {
+    BND: {
+        category: "aggregate",
+        categoryName: "Aggregate Bond Market"
+    },
+
+    TLT: {
+        category: "treasury",
+        categoryName: "Long-Term Treasury"
+    },
+
+    IEF: {
+        category: "treasury",
+        categoryName: "Intermediate Treasury"
+    },
+
+    HYG: {
+        category: "high-yield",
+        categoryName: "High-Yield Corporate"
+    },
+
+    LQD: {
+        category: "corporate",
+        categoryName: "Investment-Grade Corporate"
+    },
+
+    BGRN: {
+        category: "green",
+        categoryName: "Green Bonds"
+    }
+};
+
+let bonds = [];
+let comparisonChart = null;
 const tickerInput = document.getElementById("tickerInput");
 const searchButton = document.getElementById("searchButton");
 
@@ -123,5 +157,128 @@ function displayChart(ticker, history) {
                 }
             }
         }
+    });
+}
+async function loadBonds() {
+
+    try {
+
+        const response = await fetch("/bonds");
+
+        if (!response.ok) {
+            throw new Error("Unable to load bonds");
+        }
+
+        bonds = await response.json();
+
+        renderBonds(bonds);
+        populateBondSelectors();
+
+    } catch (error) {
+
+        console.error(error);
+    }
+}
+
+loadBonds();
+function renderBonds(bondsToRender) {
+
+    const bondList = document.getElementById("bondList");
+
+    bondList.innerHTML = "";
+
+    bondsToRender.forEach(bond => {
+
+        const metadata = bondMetadata[bond.ticker];
+
+        if (!metadata) {
+            return;
+        }
+
+        const card = document.createElement("div");
+
+        card.className = "bond-card";
+
+        card.innerHTML = `
+            <h3>${bond.ticker}</h3>
+
+            <p class="bond-category">
+                ${metadata.categoryName}
+            </p>
+
+            <p>
+                ${bond.company_name}
+            </p>
+
+            <div class="bond-metric">
+                <span>20D Volatility</span>
+                <strong>
+                    ${formatNumber(bond.volatility_20d_pct)}%
+                </strong>
+            </div>
+
+            <div class="bond-metric">
+                <span>60D Volatility</span>
+                <strong>
+                    ${formatNumber(bond.volatility_60d_pct)}%
+                </strong>
+            </div>
+
+            <div class="bond-metric">
+                <span>Risk</span>
+                <strong>
+                    ${bond.risk_level}
+                </strong>
+            </div>
+        `;
+
+        bondList.appendChild(card);
+    });
+}
+document.querySelectorAll(".bond-filter").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        document
+            .querySelectorAll(".bond-filter")
+            .forEach(item => item.classList.remove("active"));
+
+        button.classList.add("active");
+
+        const type = button.dataset.type;
+
+        if (type === "all") {
+            renderBonds(bonds);
+            return;
+        }
+
+        const filtered = bonds.filter(bond => {
+
+            const metadata = bondMetadata[bond.ticker];
+
+            return metadata &&
+                   metadata.category === type;
+        });
+
+        renderBonds(filtered);
+    });
+});
+function populateBondSelectors() {
+
+    const bondA = document.getElementById("bondA");
+    const bondB = document.getElementById("bondB");
+
+    bonds.forEach(bond => {
+
+        const optionA = document.createElement("option");
+        optionA.value = bond.ticker;
+        optionA.textContent = bond.ticker;
+
+        const optionB = document.createElement("option");
+        optionB.value = bond.ticker;
+        optionB.textContent = bond.ticker;
+
+        bondA.appendChild(optionA);
+        bondB.appendChild(optionB);
     });
 }

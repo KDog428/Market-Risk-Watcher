@@ -77,6 +77,76 @@
     </main>
 
     <script src="app.js"></script>
+    <section class="bond-section">
+
+        <h2>Bond Explorer</h2>
+    
+        <p>
+            Filter bond ETFs by category and compare their risk characteristics.
+        </p>
+    
+        <div class="bond-filters">
+            <button class="bond-filter active" data-type="all">
+                All
+            </button>
+    
+            <button class="bond-filter" data-type="treasury">
+                Treasury
+            </button>
+    
+            <button class="bond-filter" data-type="corporate">
+                Corporate
+            </button>
+    
+            <button class="bond-filter" data-type="high-yield">
+                High Yield
+            </button>
+    
+            <button class="bond-filter" data-type="aggregate">
+                Aggregate
+            </button>
+    
+            <button class="bond-filter" data-type="green">
+                Green
+            </button>
+        </div>
+    
+        <div id="bondList" class="bond-grid"></div>
+    
+    </section>
+    <section class="comparison-section">
+
+        <h2>Compare Bonds</h2>
+    
+        <div class="comparison-controls">
+    
+            <select id="bondA">
+                <option value="">Select first bond</option>
+            </select>
+    
+            <span>vs</span>
+    
+            <select id="bondB">
+                <option value="">Select second bond</option>
+            </select>
+    
+            <button id="compareButton">
+                Compare
+            </button>
+    
+        </div>
+    
+        <div id="comparisonResult" class="hidden">
+    
+            <div id="comparisonCards"></div>
+    
+            <div class="chart-container">
+                <canvas id="comparisonChart"></canvas>
+            </div>
+    
+        </div>
+    
+    </section>
 
 </body>
 </html>
