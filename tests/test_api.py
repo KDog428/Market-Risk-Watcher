@@ -189,3 +189,44 @@ def test_get_asset_not_found(seeded_bond_risk_summary):
     assert response.json() == {
         "detail": "Ticker not found"
     }
+
+def test_get_asset_history(seeded_assets):
+    with engine.begin() as connection:
+        result = connection.execute(
+            text("""
+                SELECT asset_id
+                FROM assets
+                WHERE ticker = 'TLT';
+            """)
+        ).scalar_one()
+
+        connection.execute(
+            text("""
+                INSERT INTO prices (
+                    asset_id,
+                    date,
+                    open,
+                    high,
+                    low,
+                    close,
+                    volume
+                )
+                VALUES
+                    (:asset_id, '2026-09-01', 100, 100, 100, 100, 1000),
+                    (:asset_id, '2026-09-02', 101, 101, 101, 101, 1000),
+                    (:asset_id, '2026-09-03', 102, 102, 102, 102, 1000);
+            """),
+            {"asset_id": result}
+        )
+
+    response = client.get("/assets/TLT/history?limit=2")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert len(data) == 2
+    assert data[0]["date"] == "2026-09-02"
+    assert data[0]["close"] == 101
+    assert data[1]["date"] == "2026-09-03"
+    assert data[1]["close"] == 102

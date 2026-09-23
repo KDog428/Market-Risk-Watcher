@@ -125,3 +125,35 @@ def version():
         "name": "Market Risk API",
         "version": "1.1.0"
     }
+@app.get("/assets/{ticker}/history")
+def get_asset_history(ticker: str, limit: int = 90):
+    ticker = ticker.upper()
+
+    query = text("""
+        SELECT
+            p.date,
+            p.close
+        FROM prices p
+        JOIN assets a
+            ON p.asset_id = a.asset_id
+        WHERE a.ticker = :ticker
+        ORDER BY p.date DESC
+        LIMIT :limit;
+    """)
+
+    with engine.connect() as connection:
+        rows = connection.execute(
+            query,
+            {
+                "ticker": ticker,
+                "limit": limit
+            }
+        ).mappings().all()
+
+    if not rows:
+        raise HTTPException(
+            status_code=404,
+            detail="Ticker not found"
+        )
+
+    return list(reversed(rows))
