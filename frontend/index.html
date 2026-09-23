@@ -8,145 +8,252 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js"
+        defer>
+    </script>
+
+    <script src="app.js" defer></script>
 </head>
 
 <body>
 
-    <main class="container">
-
-        <h1>Market Risk Watcher</h1>
-
-        <p class="subtitle">
-            Search a market ticker to view price and risk information.
-        </p>
-
-        <div class="search-box">
-            <input
-                id="tickerInput"
-                type="text"
-                placeholder="Enter ticker, e.g. AAPL"
-            >
-
-            <button id="searchButton">
-                Search
-            </button>
+<header class="topbar">
+    <div class="topbar-inner">
+        <div>
+            <h1>Market Risk Watcher</h1>
+            <p>Market analytics and risk monitoring</p>
         </div>
 
-        <p id="errorMessage"></p>
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="overview">
+                Overview
+            </button>
 
-        <section id="assetSection" class="hidden">
+            <button class="tab-button" data-tab="compare">
+                Compare
+            </button>
+        </nav>
+    </div>
+</header>
 
-            <h2 id="assetTitle"></h2>
 
-            <div class="cards">
+<main class="container">
 
-                <div class="card">
+    <!-- OVERVIEW -->
+    <section id="overview" class="tab-page active">
+
+        <section class="hero">
+
+            <div>
+                <p class="eyebrow">MARKET DASHBOARD</p>
+                <h2>Understand market risk at a glance.</h2>
+
+                <p class="hero-text">
+                    Search tracked equities, ETFs, bonds and market indices.
+                </p>
+            </div>
+
+            <div class="search-box">
+
+                <input
+                    id="tickerInput"
+                    type="text"
+                    placeholder="Search ticker — AAPL, TLT, SPY..."
+                >
+
+                <button id="searchButton" class="primary-button">
+                    Search
+                </button>
+
+            </div>
+
+            <p id="errorMessage" class="error-message"></p>
+
+        </section>
+
+
+        <!-- SEARCH RESULT -->
+        <section id="assetSection" class="panel hidden">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">ASSET DETAILS</p>
+                    <h2 id="assetTitle"></h2>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+
+                <div class="metric-card">
                     <span>Close</span>
                     <strong id="close"></strong>
                 </div>
 
-                <div class="card">
+                <div class="metric-card">
                     <span>Daily Return</span>
                     <strong id="dailyReturn"></strong>
                 </div>
 
-                <div class="card">
-                    <span>20-Day Average</span>
+                <div class="metric-card">
+                    <span>20D Average</span>
                     <strong id="movingAverage"></strong>
                 </div>
 
-                <div class="card">
-                    <span>20-Day Volatility</span>
+                <div class="metric-card">
+                    <span>20D Volatility</span>
                     <strong id="volatility20"></strong>
                 </div>
 
-                <div class="card">
-                    <span>60-Day Volatility</span>
+                <div class="metric-card">
+                    <span>60D Volatility</span>
                     <strong id="volatility60"></strong>
                 </div>
 
             </div>
 
-            <div class="chart-container">
+            <div class="chart-panel">
                 <canvas id="priceChart"></canvas>
             </div>
 
         </section>
 
-    </main>
 
-    <script src="app.js"></script>
-    <section class="bond-section">
+        <!-- FEATURED MARKETS -->
+        <section class="section">
 
-        <h2>Bond Explorer</h2>
-    
-        <p>
-            Filter bond ETFs by category and compare their risk characteristics.
-        </p>
-    
-        <div class="bond-filters">
-            <button class="bond-filter active" data-type="all">
-                All
-            </button>
-    
-            <button class="bond-filter" data-type="treasury">
-                Treasury
-            </button>
-    
-            <button class="bond-filter" data-type="corporate">
-                Corporate
-            </button>
-    
-            <button class="bond-filter" data-type="high-yield">
-                High Yield
-            </button>
-    
-            <button class="bond-filter" data-type="aggregate">
-                Aggregate
-            </button>
-    
-            <button class="bond-filter" data-type="green">
-                Green
-            </button>
-        </div>
-    
-        <div id="bondList" class="bond-grid"></div>
-    
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">QUICK ACCESS</p>
+                    <h2>Featured Markets</h2>
+                </div>
+
+                <p>
+                    Select an instrument to view its latest risk profile.
+                </p>
+            </div>
+
+            <div id="featuredMarkets" class="featured-grid"></div>
+
+        </section>
+
+
+        <!-- BONDS -->
+        <section class="section">
+
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">FIXED INCOME</p>
+                    <h2>Bond Explorer</h2>
+                </div>
+
+                <p>
+                    Explore bond ETFs by market segment.
+                </p>
+            </div>
+
+
+            <div class="filter-bar">
+
+                <button class="bond-filter active" data-type="all">
+                    All
+                </button>
+
+                <button class="bond-filter" data-type="treasury">
+                    Treasury
+                </button>
+
+                <button class="bond-filter" data-type="corporate">
+                    Corporate
+                </button>
+
+                <button class="bond-filter" data-type="high-yield">
+                    High Yield
+                </button>
+
+                <button class="bond-filter" data-type="aggregate">
+                    Aggregate
+                </button>
+
+                <button class="bond-filter" data-type="green">
+                    Green
+                </button>
+
+            </div>
+
+            <div id="bondList" class="bond-grid"></div>
+
+        </section>
+
     </section>
-    <section class="comparison-section">
 
-        <h2>Compare Bonds</h2>
-    
-        <div class="comparison-controls">
-    
-            <select id="bondA">
-                <option value="">Select first bond</option>
-            </select>
-    
-            <span>vs</span>
-    
-            <select id="bondB">
-                <option value="">Select second bond</option>
-            </select>
-    
-            <button id="compareButton">
-                Compare
-            </button>
-    
-        </div>
-    
-        <div id="comparisonResult" class="hidden">
-    
+
+    <!-- COMPARE PAGE -->
+    <section id="compare" class="tab-page">
+
+        <section class="hero">
+
+            <p class="eyebrow">COMPARISON</p>
+
+            <h2>Compare Bond Risk</h2>
+
+            <p class="hero-text">
+                Compare risk metrics and historical performance
+                across two bond ETFs.
+            </p>
+
+        </section>
+
+
+        <section class="panel">
+
+            <div class="comparison-controls">
+
+                <div class="select-group">
+                    <label for="bondA">Bond A</label>
+                    <select id="bondA">
+                        <option value="">Select bond</option>
+                    </select>
+                </div>
+
+
+                <div class="versus">
+                    VS
+                </div>
+
+
+                <div class="select-group">
+                    <label for="bondB">Bond B</label>
+                    <select id="bondB">
+                        <option value="">Select bond</option>
+                    </select>
+                </div>
+
+
+                <button id="compareButton" class="primary-button">
+                    Compare
+                </button>
+
+            </div>
+
+            <p id="comparisonError" class="error-message"></p>
+
+        </section>
+
+
+        <section id="comparisonResult" class="hidden">
+
             <div id="comparisonCards"></div>
-    
-            <div class="chart-container">
+
+            <div class="chart-panel">
                 <canvas id="comparisonChart"></canvas>
             </div>
-    
-        </div>
-    
+
+        </section>
+
     </section>
+
+</main>
 
 </body>
 </html>
