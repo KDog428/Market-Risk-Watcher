@@ -189,8 +189,32 @@ def test_get_asset_not_found(seeded_bond_risk_summary):
     assert response.json() == {
         "detail": "Ticker not found"
     }
+@pytest.fixture
+def seeded_price_history(seeded_assets):
+    with engine.begin() as connection:
+        connection.execute(
+            text("""
+                DROP TABLE IF EXISTS prices;
+            """)
+        )
 
-def test_get_asset_history(seeded_assets):
+        connection.execute(
+            text("""
+                CREATE TABLE prices (
+                    price_id BIGSERIAL PRIMARY KEY,
+                    asset_id INTEGER NOT NULL
+                        REFERENCES assets(asset_id),
+                    date DATE NOT NULL,
+                    open NUMERIC,
+                    high NUMERIC,
+                    low NUMERIC,
+                    close NUMERIC,
+                    volume BIGINT,
+                    UNIQUE (asset_id, date)
+                );
+            """)
+        )
+def test_get_asset_history(seeded_price_history):
     with engine.begin() as connection:
         result = connection.execute(
             text("""
