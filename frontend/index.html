@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Market Risk Watcher</title>
 
     <link rel="stylesheet" href="style.css">
@@ -12,31 +11,23 @@
         src="https://cdn.jsdelivr.net/npm/chart.js"
         defer>
     </script>
-
     <script src="app.js" defer></script>
 </head>
 
 <body>
-
 <header class="topbar">
     <div class="topbar-inner">
-        <div>
+        <div class="brand-block">
             <h1>Market Risk Watcher</h1>
             <p>Market analytics and risk monitoring</p>
         </div>
 
-        <nav class="tabs">
-            <button class="tab-button active" data-tab="overview">
-                Overview
-            </button>
-
-            <button class="tab-button" data-tab="compare">
-                Compare
-            </button>
+        <nav class="tabs" aria-label="Dashboard sections">
+            <button class="tab-button active" data-tab="overview">Overview</button>
+            <button class="tab-button" data-tab="compare">Compare</button>
         </nav>
     </div>
 </header>
-
 
 <main class="container">
 
@@ -44,47 +35,39 @@
     <section id="overview" class="tab-page active">
 
         <section class="hero">
-
             <div>
                 <p class="eyebrow">MARKET DASHBOARD</p>
                 <h2>Understand market risk at a glance.</h2>
-
                 <p class="hero-text">
-                    Search tracked equities, ETFs, bonds and market indices.
+                    Search tracked stocks, ETFs, bonds and market indices.
                 </p>
             </div>
 
             <div class="search-box">
-
                 <input
                     id="tickerInput"
                     type="text"
-                    placeholder="Search ticker — AAPL, TLT, SPY..."
+                    placeholder="Search ticker — AAPL, SPY, TLT, ^VIX..."
+                    autocomplete="off"
                 >
 
-                <button id="searchButton" class="primary-button">
-                    Search
-                </button>
-
+                <button id="searchButton" class="primary-button">Search</button>
             </div>
 
             <p id="errorMessage" class="error-message"></p>
-
         </section>
 
-
-        <!-- SEARCH RESULT -->
+        <!-- SELECTED ASSET -->
         <section id="assetSection" class="panel hidden">
-
-            <div class="section-heading">
+            <div class="section-heading compact-heading">
                 <div>
                     <p class="eyebrow">ASSET DETAILS</p>
                     <h2 id="assetTitle"></h2>
+                    <p id="assetCategory" class="muted-text"></p>
                 </div>
             </div>
 
             <div class="metric-grid">
-
                 <div class="metric-card">
                     <span>Close</span>
                     <strong id="close"></strong>
@@ -109,151 +92,143 @@
                     <span>60D Volatility</span>
                     <strong id="volatility60"></strong>
                 </div>
-
             </div>
 
             <div class="chart-panel">
-                <canvas id="priceChart"></canvas>
+                <div class="chart-header">
+                    <div>
+                        <h3>Price History</h3>
+                        <p id="priceChartSubtitle">Closing price</p>
+                    </div>
+
+                    <div class="range-selector" id="priceRangeSelector" aria-label="Price chart range">
+                        <button data-range="22">1M</button>
+                        <button data-range="66">3M</button>
+                        <button class="active" data-range="132">6M</button>
+                        <button data-range="252">1Y</button>
+                        <button data-range="756">3Y</button>
+                        <button data-range="1260">5Y</button>
+                        <button data-range="5000">ALL</button>
+                    </div>
+                </div>
+
+                <div class="main-chart-wrap">
+                    <canvas id="priceChart"></canvas>
+                </div>
             </div>
-
         </section>
-
 
         <!-- FEATURED MARKETS -->
         <section class="section">
-
             <div class="section-heading">
                 <div>
                     <p class="eyebrow">QUICK ACCESS</p>
                     <h2>Featured Markets</h2>
                 </div>
-
-                <p>
-                    Select an instrument to view its latest risk profile.
-                </p>
+                <p>Select a market to open its detailed risk profile.</p>
             </div>
 
             <div id="featuredMarkets" class="featured-grid"></div>
-
         </section>
 
-
-        <!-- BONDS -->
+        <!-- ALL ASSETS -->
         <section class="section">
-
             <div class="section-heading">
                 <div>
-                    <p class="eyebrow">FIXED INCOME</p>
-                    <h2>Bond Explorer</h2>
+                    <p class="eyebrow">MARKET UNIVERSE</p>
+                    <h2>Market Explorer</h2>
                 </div>
-
-                <p>
-                    Explore bond ETFs by market segment.
-                </p>
+                <p>Browse all tracked financial instruments by asset class.</p>
             </div>
 
-
-            <div class="filter-bar">
-
-                <button class="bond-filter active" data-type="all">
-                    All
-                </button>
-
-                <button class="bond-filter" data-type="treasury">
-                    Treasury
-                </button>
-
-                <button class="bond-filter" data-type="corporate">
-                    Corporate
-                </button>
-
-                <button class="bond-filter" data-type="high-yield">
-                    High Yield
-                </button>
-
-                <button class="bond-filter" data-type="aggregate">
-                    Aggregate
-                </button>
-
-                <button class="bond-filter" data-type="green">
-                    Green
-                </button>
-
+            <div class="filter-bar" id="assetTypeFilters">
+                <button class="asset-filter active" data-type="all">All</button>
+                <button class="asset-filter" data-type="stock">Stocks</button>
+                <button class="asset-filter" data-type="equity">Equity ETFs</button>
+                <button class="asset-filter" data-type="bond">Bond ETFs</button>
+                <button class="asset-filter" data-type="index">Indices</button>
+                <button class="asset-filter" data-type="other">Other ETFs</button>
             </div>
 
-            <div id="bondList" class="bond-grid"></div>
+            <div id="bondSubfilters" class="filter-bar subfilter-bar hidden">
+                <span class="subfilter-label">Bond segment:</span>
+                <button class="bond-segment-filter active" data-segment="all">All Bonds</button>
+                <button class="bond-segment-filter" data-segment="treasury">Treasury</button>
+                <button class="bond-segment-filter" data-segment="corporate">Corporate</button>
+                <button class="bond-segment-filter" data-segment="high-yield">High Yield</button>
+                <button class="bond-segment-filter" data-segment="aggregate">Aggregate</button>
+                <button class="bond-segment-filter" data-segment="green">Green</button>
+            </div>
 
+            <div id="assetList" class="asset-grid"></div>
         </section>
 
     </section>
 
 
-    <!-- COMPARE PAGE -->
+    <!-- COMPARE -->
     <section id="compare" class="tab-page">
 
         <section class="hero">
-
             <p class="eyebrow">COMPARISON</p>
-
-            <h2>Compare Bond Risk</h2>
-
+            <h2>Compare Assets</h2>
             <p class="hero-text">
-                Compare risk metrics and historical performance
-                across two bond ETFs.
+                Compare price, return and volatility across any two tracked financial instruments.
             </p>
-
         </section>
 
-
         <section class="panel">
-
             <div class="comparison-controls">
-
                 <div class="select-group">
-                    <label for="bondA">Bond A</label>
-                    <select id="bondA">
-                        <option value="">Select bond</option>
+                    <label for="assetA">Asset A</label>
+                    <select id="assetA">
+                        <option value="">Select first asset</option>
                     </select>
                 </div>
 
-
-                <div class="versus">
-                    VS
-                </div>
-
+                <div class="versus">VS</div>
 
                 <div class="select-group">
-                    <label for="bondB">Bond B</label>
-                    <select id="bondB">
-                        <option value="">Select bond</option>
+                    <label for="assetB">Asset B</label>
+                    <select id="assetB">
+                        <option value="">Select second asset</option>
                     </select>
                 </div>
 
-
-                <button id="compareButton" class="primary-button">
-                    Compare
-                </button>
-
+                <button id="compareButton" class="primary-button">Compare</button>
             </div>
 
             <p id="comparisonError" class="error-message"></p>
-
         </section>
 
-
         <section id="comparisonResult" class="hidden">
-
             <div id="comparisonCards"></div>
 
             <div class="chart-panel">
-                <canvas id="comparisonChart"></canvas>
-            </div>
+                <div class="chart-header">
+                    <div>
+                        <h3>Relative Performance</h3>
+                        <p>Percentage change from the start of the selected period.</p>
+                    </div>
 
+                    <div class="range-selector" id="comparisonRangeSelector" aria-label="Comparison chart range">
+                        <button data-range="22">1M</button>
+                        <button data-range="66">3M</button>
+                        <button class="active" data-range="132">6M</button>
+                        <button data-range="252">1Y</button>
+                        <button data-range="756">3Y</button>
+                        <button data-range="1260">5Y</button>
+                        <button data-range="5000">ALL</button>
+                    </div>
+                </div>
+
+                <div class="main-chart-wrap">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
         </section>
 
     </section>
-
 </main>
-
 </body>
 </html>
