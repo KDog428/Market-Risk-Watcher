@@ -81,9 +81,7 @@ Yahoo Finance Updater
 - GitHub Actions
 - Self-hosted EC2 runner
 - Automated tests and deployment
-  **Database**
-- PostgreSQL
-- Amazon RDS
+
 
 ## API Endpoints 
 
