@@ -4,10 +4,20 @@ from sqlalchemy import text
 from app.database import engine
 import os 
 import secrets
+from fastapi.middleware.cors import CORSMiddleware
 from app.yahoo_service import update_market_data
 app = FastAPI(
     title="Market Risk API",
     version="1.1.0"
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://kdog428.github.io"
+    ],
+    allow_credentials=False,
+    allow_methods=["GET"],
+    allow_headers=["*"],
 )
 
 

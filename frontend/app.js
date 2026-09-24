@@ -1,6 +1,15 @@
-// --------------------------------------------------
-// Configuration
-// --------------------------------------------------
+const API_BASE_URL =
+    window.location.hostname.endsWith("github.io")
+        ? "https://market-risk-kdog.duckdns.org"
+        : "";
+
+
+function apiFetch(path, options = {}) {
+    return window.fetch(
+        `${API_BASE_URL}${path}`,
+        options
+    );
+}
 
 const bondMetadata = {
     BND: {
@@ -373,11 +382,11 @@ async function showAsset(ticker) {
             historyResponse
         ] = await Promise.all([
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(ticker)}`
             ),
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(ticker)}/history?limit=${priceRange}`
             )
         ]);
@@ -671,7 +680,7 @@ document
                 try {
 
                     const response =
-                        await fetch(
+                        await apiFetch(
                             `/assets/${encodeURIComponent(currentTicker)}/history?limit=${priceRange}`
                         );
 
@@ -731,11 +740,11 @@ async function loadFeaturedMarkets() {
                         historyResponse
                     ] = await Promise.all([
 
-                        fetch(
+                        apiFetch(
                             `/assets/${encodeURIComponent(ticker)}`
                         ),
 
-                        fetch(
+                        apiFetch(
                             `/assets/${encodeURIComponent(ticker)}/history?limit=30`
                         )
                     ]);
@@ -1042,7 +1051,7 @@ async function loadAssets() {
     try {
 
         const response =
-            await fetch("/assets");
+            await apiFetch("/assets");
 
 
         if (!response.ok) {
@@ -1568,19 +1577,19 @@ async function compareAssets() {
             historyBResponse
         ] = await Promise.all([
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(tickerA)}`
             ),
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(tickerB)}`
             ),
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(tickerA)}/history?limit=${comparisonRange}`
             ),
 
-            fetch(
+            apiFetch(
                 `/assets/${encodeURIComponent(tickerB)}/history?limit=${comparisonRange}`
             )
         ]);
@@ -1999,11 +2008,11 @@ document
                         responseB
                     ] = await Promise.all([
 
-                        fetch(
+                        apiFetch(
                             `/assets/${encodeURIComponent(comparisonTickerA)}/history?limit=${comparisonRange}`
                         ),
 
-                        fetch(
+                        apiFetch(
                             `/assets/${encodeURIComponent(comparisonTickerB)}/history?limit=${comparisonRange}`
                         )
                     ]);
