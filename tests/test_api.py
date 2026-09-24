@@ -254,3 +254,52 @@ def test_get_asset_history(seeded_price_history):
     assert data[0]["close"] == 101
     assert data[1]["date"] == "2026-09-03"
     assert data[1]["close"] == 102
+
+def test_update_requires_api_key(
+    monkeypatch
+):
+    monkeypatch.setenv(
+        "UPDATE_API_KEY",
+        "test-secret-key"
+    )
+
+    response = client.post(
+        "/update"
+    )
+
+    assert response.status_code == 401
+
+    assert response.json() == {
+        "detail": "Unauthorized"
+    }
+
+def test_update_accepts_valid_api_key(
+    monkeypatch
+):
+    monkeypatch.setenv(
+        "UPDATE_API_KEY",
+        "test-secret-key"
+    )
+
+    monkeypatch.setattr(
+        "app.main.update_market_data",
+        lambda: {
+            "status": "ok",
+            "inserted_rows": 0
+        }
+    )
+
+    response = client.post(
+        "/update",
+        headers={
+            "X-API-Key":
+                "test-secret-key"
+        }
+    )
+
+    assert response.status_code == 200
+
+    assert response.json() == {
+        "status": "ok",
+        "inserted_rows": 0
+    }

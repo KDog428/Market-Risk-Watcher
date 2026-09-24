@@ -12,6 +12,7 @@ services:
       DB_HOST: ${API_DB_HOST}
       DB_PORT: ${API_DB_PORT}
       DB_NAME: ${API_DB_NAME}
+      UPDATE_API_KEY: ${UPDATE_API_KEY}
 
 
 

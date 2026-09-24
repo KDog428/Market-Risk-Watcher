@@ -1,7 +1,9 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from app.database import engine
+import os 
+import secrets
 from app.yahoo_service import update_market_data
 app = FastAPI(
     title="Market Risk API",
@@ -116,8 +118,35 @@ def get_asset(ticker: str):
             detail="Ticker not found")
 
     return dict(result)
+def require_update_api_key(
+    x_api_key: str | None = Header(default=None)
+):
+    expected_key = os.getenv("UPDATE_API_KEY")
+
+    if not expected_key:
+        raise HTTPException(
+            status_code=503,
+            detail="Update endpoint is not configured"
+        )
+
+    if (
+        not x_api_key
+        or not secrets.compare_digest(
+            x_api_key,
+            expected_key
+        )
+    ):
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized"
+        )
+    
 @app.post("/update")
-def update_data():
+def update(
+    x_api_key: str | None = Header(default=None)
+):
+    require_update_api_key(x_api_key)
+
     return update_market_data()
 
 @app.get("/version")
