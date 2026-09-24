@@ -1,30 +1,36 @@
 # Market Risk Watcher
 
-Market Risk Watcher is a cloud-deployed financial market monitoring API built with Python, FastAPI, PostgreSQL, Docker, AWS, and GitHub Actions.
+Market Risk Watcher is a full-stack market analytics platform for exploring
+stocks, ETFs, bond funds, and market indices.
 
-The project collects market data from Yahoo Finance, stores historical prices in PostgreSQL, calculates risk metrics using SQL, and exposes the 
-results through a REST API.
+The application collects market data, stores it in PostgreSQL, calculates
+risk metrics, exposes the data through a FastAPI API, and provides an
+interactive web dashboard for asset analysis and comparison.
+
+## Live Demo
+
+https://kdog428.github.io/Market-Risk-Watcher/
 
 ## Architecture
 
 ```text
-Yahoo Finance
-      |
-      v
-Market Data Updater
-      |
-      v
+GitHub Pages
+     |
+     | HTTPS
+     v
+DuckDNS Domain
+     |
+     v
+Caddy Reverse Proxy
+     |
+     v
+FastAPI on AWS EC2
+     |
+     v
 Amazon RDS PostgreSQL
-      ^
-      |
-FastAPI
-      |
-Docker
-      |
-Amazon EC2
-      ^
-      |
-GitHub Actions CI/CD
+     ^
+     |
+Yahoo Finance Updater
 
 ```
 ## Features
@@ -44,20 +50,55 @@ GitHub Actions CI/CD
 -Kubernetes manifests for local orchestration experiments
 
 ## Technology Stack
--Python
--FastAPI
--PostgreSQL
--SQLAlchemy
--pandas
--yfinance
--Docker
--AWS EC2
--Amazon RDS
--GitHub Actions
--pytest
--Kubernetes
--kind
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+- Chart.js
+- GitHub Pages
 
+**Backend**
+- Python
+- FastAPI
+- SQLAlchemy
+- Pandas
+- yfinance
+
+**Database**
+- PostgreSQL
+- Amazon RDS
+
+**Infrastructure**
+- AWS EC2
+- Docker
+- Docker Compose
+- Caddy
+- DuckDNS
+- systemd
+- Kubernetes / kind for local orchestration learning
+
+**CI/CD**
+- GitHub Actions
+- Self-hosted EC2 runner
+- Automated tests and deployment
+  **Database**
+- PostgreSQL
+- Amazon RDS
+
+**Infrastructure**
+- AWS EC2
+- Docker
+- Docker Compose
+- Caddy
+- DuckDNS
+- systemd
+- Kubernetes / kind for local orchestration learning
+
+**CI/CD**
+- GitHub Actions
+- Self-hosted EC2 runner
+- Automated tests and deployment
+  
 ## API Endpoints 
 
 | Method | Endpoint | Description |
@@ -127,7 +168,9 @@ The Kubernetes configuration demonstrates the following concepts:
       -Self-healing
 
 ## Security
-
-Sensitive configuration such as database passwords is stored in environment variables and is not committed to Git.
-
-The RDS PostgreSQL database is not publicly exposed and is accessed privately from the EC2 application server.
+- Production PostgreSQL runs privately in Amazon RDS
+- FastAPI is exposed through an HTTPS reverse proxy
+- Direct public access to the application container is restricted
+- The market update endpoint requires an API key
+- Secrets are stored in environment variables and excluded from Git
+- GitHub Pages is allowed through a restricted CORS configuration
