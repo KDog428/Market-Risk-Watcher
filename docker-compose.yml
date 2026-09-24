@@ -1,10 +1,12 @@
 services:
+
   api:
     build: .
     container_name: market-risk-api
+    restart: unless-stopped
 
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
 
     environment:
       DB_USER: ${API_DB_USER}
@@ -15,4 +17,24 @@ services:
       UPDATE_API_KEY: ${UPDATE_API_KEY}
 
 
+  caddy:
+    image: caddy:2
+    container_name: market-risk-caddy
+    restart: unless-stopped
 
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+    depends_on:
+      - api
+
+
+volumes:
+  caddy_data:
+  caddy_config:
