@@ -85,20 +85,6 @@ Yahoo Finance Updater
 - PostgreSQL
 - Amazon RDS
 
-**Infrastructure**
-- AWS EC2
-- Docker
-- Docker Compose
-- Caddy
-- DuckDNS
-- systemd
-- Kubernetes / kind for local orchestration learning
-
-**CI/CD**
-- GitHub Actions
-- Self-hosted EC2 runner
-- Automated tests and deployment
-  
 ## API Endpoints 
 
 | Method | Endpoint | Description |
