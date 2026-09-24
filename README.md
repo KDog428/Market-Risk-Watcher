@@ -160,3 +160,7 @@ The Kubernetes configuration demonstrates the following concepts:
 - The market update endpoint requires an API key
 - Secrets are stored in environment variables and excluded from Git
 - GitHub Pages is allowed through a restricted CORS configuration
+
+ ## Acknowledgements
+ChatGPT was used as a development and learning assistant for debugging, code review, documentation, and guidance throughout this project.
+All implementation, testing, deployment, and final project decisions were reviewed and managed by the author.
